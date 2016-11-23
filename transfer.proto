@@ -46,6 +46,9 @@ message TransferParameters {
 
     // Enable IPv6
     bool enable_ipv6 = 14;
+
+    // Max time on the queue
+    google.protobuf.Duration queue_timeout = 15;
 }
 
 // Transfer to be run by FTS
@@ -83,20 +86,17 @@ message Transfer {
     // Destination file
     string destination = 7;
 
-    // Activity tag
-    string activity = 8;
-
     // File size, specified by the user
-    uint64 filesize = 9;
+    uint64 filesize = 8;
     // File checksum, as type:value (i.e. adler32:12345)
-    string checksum = 10;
+    string checksum = 9;
 
     // Parameters for the transfer
-    TransferParameters parameters = 11;
+    TransferParameters parameters = 10;
 
     // Custom metadata
-    bytes metadata = 12;
+    bytes metadata = 11;
 
     // Information for when it i sdone
-    TransferInfo info = 13;
+    TransferInfo info = 12;
 }
