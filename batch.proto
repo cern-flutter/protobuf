@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+import "transfer.proto";
+import "google/protobuf/timestamp.proto";
+
+
+// Batch contains a set of transfer that form a logical unit of work
+message Batch {
+    // Submission timestamp, used for scheduling
+    google.protobuf.Timestamp timestamp = 1;
+
+    enum Type {
+        // All transfers within the batch are run at once
+        NORMAL = 0;
+        // Transfer i is scheduled when i-0 succeeded
+        MULTIHOP = 1;
+        // Transfer i is scheduled when i-0 failed
+        MULTISOURCE = 2;
+    }
+    Type type = 2;
+
+    enum State {
+        SUBMITTED = 0;
+        READY = 1;
+        RUNNING = 2;
+        DONE = 3;
+    }
+    State state = 3;
+
+    repeated Transfer transfers = 4;
+
+    // Identify the user's credentials
+    string cred_id = 5;
+
+    // Keys used for scheduling
+    string source_se = 6;
+    string dest_se = 7;
+    string vo = 8;
+    string activity = 9;
+}

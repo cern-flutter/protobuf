@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+
+// Indicates the progress of a transfer
+message PerformanceMarker {
+    google.protobuf.Timestamp timestamp = 1;
+    string transfer_id = 2;
+    string source_se = 3;
+    string dest_se = 4;
+    float throughput = 5;
+    uint64 transferred = 6;
+}

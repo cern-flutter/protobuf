@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+import "transfer_status.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+
+// TransferParameters determines the transfer behaviour
+message TransferParameters {
+    // If true, there will be no preparatory, nor validation, steps
+    bool only_copy = 1;
+    // TCP buffer size
+    uint32 tcp_buffer_size = 2;
+    // Number of TCP connections if supported by the protocol
+    uint32 nstreams = 3;
+    // Transfer timeout, in seconds
+    google.protobuf.Duration timeout = 4;
+    // Number of times to retry on recoverable failure
+    uint32 retry = 5;
+    // How long to wait between attempts
+    google.protobuf.Duration retry_delay = 6;
+
+    // Staging operation timeout, to be enforced by the storage
+    google.protobuf.Duration staging_timeout = 7;
+    // How long should the storage keep the file on disk
+    google.protobuf.Duration pin_lifetime = 8;
+    // Source space token, for staging operations
+    string source_spacetoken = 9;
+    // Destination space token, for the transfer
+    string dest_spacetoken = 10;
+
+    // Checksum mode
+    enum ChecksumMode {
+        NONE = 0;
+        SOURCE = 1;
+        TARGET = 2;
+        END2END = 3;
+    };
+    ChecksumMode checksum_mode = 11;
+
+    // Overwrite the file if it exists
+    bool overwrite = 12;
+
+    // Enable UDT
+    bool enable_udt = 13;
+
+    // Enable IPv6
+    bool enable_ipv6 = 14;
+}
+
+// Transfer to be run by FTS
+message Transfer {
+    // 	Submitted -> Ready -> Active -> Finished/Failed
+    // Optionally, if staging is required
+    //	Staging -> Started -> [Submitted -> Ready -> Active] -> Finished/Failed
+    enum State {
+        STAGING = 0;
+        STAGING_STARTED = 1;
+        SUBMITTED = 2;
+        ACTIVE = 3;
+        FINISHED = 4;
+        FAILED = 5;
+        CANCELED = 6;
+
+        ON_HOLD = 10;
+        UNUSED = 11;
+    }
+
+    State state = 1;
+
+    // Job to which this transfer belongs
+    string job_id = 2;
+    // Transfer id
+    string transfer_id = 3;
+    // Retry attempt
+    uint32 retry = 4;
+
+    // Expiration time
+    google.protobuf.Timestamp expiration_time = 5;
+
+    // Source file
+    string source = 6;
+    // Destination file
+    string destination = 7;
+
+    // Activity tag
+    string activity = 8;
+
+    // File size, specified by the user
+    uint64 filesize = 9;
+    // File checksum, as type:value (i.e. adler32:12345)
+    string checksum = 10;
+
+    // Parameters for the transfer
+    TransferParameters parameters = 11;
+
+    // Custom metadata
+    bytes metadata = 12;
+
+    // Information for when it i sdone
+    TransferInfo info = 13;
+}

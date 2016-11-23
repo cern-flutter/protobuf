@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+import "interval.proto";
+
+
+// TransferError holds details about a transfer error
+message TransferError {
+    enum Scope {
+        UNKNOWN = 0;
+        SOURCE = 1;
+        DESTINATION = 2;
+        TRANSFER = 3;
+        AGENT = 4;
+    };
+    Scope scope = 1;
+
+    int32 code = 2;
+    string description = 3;
+    bool recoverable = 4;
+}
+
+// TransferIntervals holds details about the time it took each stage
+message TransferIntervals {
+    Interval total = 1;
+
+    Interval transfer = 2;
+    Interval source_checksum = 3;
+    Interval dest_checksum = 4;
+
+    map<string, Interval> extra = 5;
+}
+
+// TransferRunStatistics holds details about a transfer execution
+message TransferRunStatistics {
+    float throughput = 1;
+    uint64 transferred = 2;
+
+    TransferIntervals intervals = 3;
+}
+
+// TransferInfo holds the specific status of a transfer during the whole process chain
+message TransferInfo {
+    TransferError error = 1;
+    string Message = 2;
+    TransferRunStatistics stats = 3;
+    string log_file = 4;
+}
