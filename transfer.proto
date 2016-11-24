@@ -4,6 +4,8 @@ import "transfer_status.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
 
+package messages;
+
 
 // TransferParameters determines the transfer behaviour
 message TransferParameters {
