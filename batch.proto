@@ -9,7 +9,7 @@ package messages;
 // Batch contains a set of transfer that form a logical unit of work
 message Batch {
     // Submission timestamp, used for scheduling
-    google.protobuf.Timestamp timestamp = 1;
+    google.protobuf.Timestamp submitted = 1;
 
     enum State {
         STAGING = 0;
